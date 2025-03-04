@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishes Board</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Fullscreen Video Background */
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        /* Styling for body */
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Wishes board container */
+        .board-container {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0px 0px 20px rgba(255, 215, 0, 0.3);
+            position: relative;
+        }
+
+        /* Wish card styling */
+        .wish-card {
+            background: #FFDA79; /* Soft sunflower yellow */
+            color: #4E342E; /* Deep brown */
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+            transform: rotate(-2deg);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards ease-in-out;
+        }
+
+        .wish-card:hover {
+            transform: rotate(0);
+            box-shadow: 5px 5px 15px rgba(255, 153, 0, 0.5);
+        }
+
+        /* Floating animation for magic effect */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="p-8 flex flex-col items-center justify-center min-h-screen relative">
+
+    <!-- Sunflower Video Background -->
+    <video autoplay loop muted playsinline class="video-bg">
+        <source src="sunflower-background.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="max-w-4xl mx-auto board-container">
+        <h1 class="text-4xl font-extrabold text-white text-center mb-6">🌻 Women's Day Wishes Board 🌻</h1>
+
+        <div id="wishesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Wishes will be loaded here -->
+        </div>
+
+        <div class="text-center mt-8">
+            <a href="index.html" class="bg-orange-500 text-white font-bold p-3 rounded-lg text-lg hover:bg-orange-600 transition">⬅️ Back to Submit Page</a>
+        </div>
+    </div>
+
+    <script>
+        function loadWishes() {
+            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
+            let wishesContainer = document.getElementById("wishesContainer");
+
+            if (wishes.length === 0) {
+                wishesContainer.innerHTML = `<p class="text-center text-white text-lg">No wishes yet. Submit one now!</p>`;
+                return;
+            }
+
+            wishesContainer.innerHTML = "";
+
+            wishes.forEach((wish, index) => {
+                let wishCard = document.createElement("div");
+                wishCard.className = "wish-card p-4 rounded-lg shadow-md";
+                wishCard.style.animationDelay = `${index * 0.2}s`; // Staggered fade-in effect
+
+                let wishText = `
+                    <p>✨ <strong>To:</strong> ${wish.to}</p>
+                    <p>${wish.text}</p>
+                    <p>💌 <strong>From:</strong> ${wish.from}</p>
+                `;
+
+                if (wish.image) {
+                    wishText += `<img src="${wish.image}" class="w-full mt-4 rounded-lg shadow-md">`;
+                }
+
+                wishCard.innerHTML = wishText;
+                wishesContainer.appendChild(wishCard);
+            });
+        }
+
+        window.onload = loadWishes;
+    </script>
+
+</body>
+</html>
