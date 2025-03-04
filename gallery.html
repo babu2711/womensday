@@ -65,12 +65,6 @@
             margin-bottom: 15px;
         }
 
-        /* Smooth fade-in animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         /* Mobile Optimization */
         @media (max-width: 600px) {
             .board-container {
@@ -102,41 +96,6 @@
             <a href="index.html" class="bg-orange-500 text-white font-bold p-3 rounded-lg text-lg hover:bg-orange-600 transition">⬅️ Back to Submit Page</a>
         </div>
     </div>
-
-    <script>
-        function loadWishes() {
-            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
-            let wishesContainer = document.getElementById("wishesContainer");
-
-            if (wishes.length === 0) {
-                wishesContainer.innerHTML = `<p class="text-center text-white text-lg">No wishes yet. Submit one now!</p>`;
-                return;
-            }
-
-            wishesContainer.innerHTML = "";
-
-            wishes.forEach((wish, index) => {
-                let wishCard = document.createElement("div");
-                wishCard.className = "wish-card p-4 rounded-lg shadow-md";
-                wishCard.style.animationDelay = `${index * 0.2}s`; // Staggered fade-in effect
-
-                let wishText = `
-                    <p>✨ <strong>To:</strong> ${wish.to}</p>
-                    <p>${wish.text}</p>
-                    <p>💌 <strong>From:</strong> ${wish.from}</p>
-                `;
-
-                if (wish.image) {
-                    wishText += `<img src="${wish.image}" class="w-full mt-4 rounded-lg shadow-md">`;
-                }
-
-                wishCard.innerHTML = wishText;
-                wishesContainer.appendChild(wishCard);
-            });
-        }
-
-        window.onload = loadWishes;
-    </script>
 
 </body>
 </html>
