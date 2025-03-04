@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.3.3/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        /* Video Background */
+        /* Ensure Full-Screen Video Works on Mobile */
         .video-bg {
             position: fixed;
             top: 0;
@@ -18,38 +18,63 @@
             object-fit: cover;
             z-index: -1;
         }
+
+        /* Make sure scrolling works */
         body {
             font-family: 'Poppins', sans-serif;
             color: white;
-            overflow: hidden;
-            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
+
         .container {
             position: relative;
             z-index: 1;
             backdrop-filter: blur(10px);
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        /* Adjust Form Input Fields for Mobile */
+        input, button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-6">
+<body>
 
     <!-- Video Background -->
     <video autoplay loop muted playsinline class="video-bg">
-        <source src="background.mp4" type="video/mp4">
+        <source src="sunflower-background.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
-    <div class="max-w-lg w-full bg-white shadow-lg rounded-2xl p-8 text-center text-gray-900 container">
+    <div class="container bg-white shadow-lg rounded-lg p-6 text-center text-gray-900">
         <!-- Logo -->
         <div class="flex justify-center mb-4">
-            <img src="logo.png" alt="Zone Sorcerers Logo" class="w-28 h-28 rounded-full shadow-lg">
+            <img src="logo.png" alt="Zone Sorcerers Logo" class="w-24 h-24 rounded-full shadow-lg">
         </div>
 
         <!-- Header -->
         <h2 class="text-md font-semibold text-gray-500">An Initiative of</h2>
-        <h1 class="text-3xl font-extrabold text-purple-700 border-b-4 border-purple-500 pb-2 inline-block">Zone Sorcerers</h1>
+        <h1 class="text-2xl font-extrabold text-purple-700 border-b-4 border-purple-500 pb-2 inline-block">Zone Sorcerers</h1>
 
         <!-- Women's Day Quote -->
         <p class="italic text-gray-700 mt-3 text-lg">“Empowered women, empower the world.”</p>
@@ -58,59 +83,18 @@
 
         <!-- Form to Upload Wishes -->
         <div class="mt-6">
-            <input type="text" id="toInput" class="w-full p-3 border rounded-lg text-lg focus:ring-2 focus:ring-purple-400 focus:outline-none" placeholder="To: (Recipient Name)">
-            <input type="text" id="wishInput" class="w-full p-3 border rounded-lg text-lg focus:ring-2 focus:ring-purple-400 focus:outline-none mt-3" placeholder="Write your wish here...">
-            <input type="text" id="fromInput" class="w-full p-3 border rounded-lg text-lg focus:ring-2 focus:ring-purple-400 focus:outline-none mt-3" placeholder="From: (Your Name)">
-            <input type="file" id="imageInput" accept="image/*" class="w-full p-2 mt-3 border rounded-lg">
-            <button onclick="submitWish()" class="submit-btn w-full bg-purple-700 text-white font-bold p-3 mt-3 rounded-lg text-lg hover:bg-purple-800">Submit Wish</button>
+            <input type="text" id="toInput" class="border rounded-lg text-lg p-2 focus:ring-2 focus:ring-purple-400 focus:outline-none" placeholder="To: (Recipient Name)">
+            <input type="text" id="wishInput" class="border rounded-lg text-lg p-2 mt-3 focus:ring-2 focus:ring-purple-400 focus:outline-none" placeholder="Write your wish here...">
+            <input type="text" id="fromInput" class="border rounded-lg text-lg p-2 mt-3 focus:ring-2 focus:ring-purple-400 focus:outline-none" placeholder="From: (Your Name)">
+            <input type="file" id="imageInput" accept="image/*" class="border rounded-lg p-2 mt-3">
+            <button onclick="submitWish()" class="bg-purple-700 text-white font-bold p-3 mt-3 rounded-lg text-lg hover:bg-purple-800">Submit Wish</button>
         </div>
 
         <!-- View Wishes Button -->
         <div class="mt-6">
-            <a href="gallery.html" class="w-full block text-center bg-indigo-600 text-white font-bold p-3 rounded-lg text-lg hover:bg-indigo-700 transition">📌 View Wishes Board</a>
+            <a href="gallery.html" class="bg-orange-500 text-white font-bold p-3 rounded-lg text-lg hover:bg-orange-600 transition">📌 View Wishes Board</a>
         </div>
     </div>
-
-    <script>
-        function submitWish() {
-            let toText = document.getElementById("toInput").value;
-            let wishText = document.getElementById("wishInput").value;
-            let fromText = document.getElementById("fromInput").value;
-            let imageInput = document.getElementById("imageInput").files[0];
-
-            if (toText.trim() === "" || wishText.trim() === "" || fromText.trim() === "") {
-                alert("Please fill out all fields before submitting.");
-                return;
-            }
-
-            let wishData = { to: toText, text: wishText, from: fromText };
-
-            if (imageInput) {
-                let reader = new FileReader();
-                reader.onload = function(event) {
-                    wishData.image = event.target.result;
-                    saveWish(wishData);
-                };
-                reader.readAsDataURL(imageInput);
-            } else {
-                saveWish(wishData);
-            }
-        }
-
-        function saveWish(wishData) {
-            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
-            wishes.unshift(wishData);
-            localStorage.setItem("wishes", JSON.stringify(wishes));
-
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-
-            alert("Wish submitted! 🎉 Check the Wishes Board.");
-            document.getElementById("toInput").value = "";
-            document.getElementById("wishInput").value = "";
-            document.getElementById("fromInput").value = "";
-            document.getElementById("imageInput").value = "";
-        }
-    </script>
 
 </body>
 </html>
