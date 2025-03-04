@@ -8,14 +8,15 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.3.3/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        /* Ensure Full-Screen Video Works on Mobile */
+        /* Ensure Full-Screen Video Works on Web & Mobile */
         .video-bg {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
             object-fit: cover;
+            transform: translate(-50%, -50%);
             z-index: -1;
         }
 
@@ -25,9 +26,8 @@
             color: white;
             overflow-x: hidden;
             overflow-y: auto;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
@@ -61,9 +61,9 @@
 </head>
 <body>
 
-    <!-- Video Background -->
+    <!-- **Wish Submission Page Background Video** -->
     <video autoplay loop muted playsinline class="video-bg">
-        <source src="sunflower-background.mp4" type="video/mp4">
+        <source src="wish-background.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
