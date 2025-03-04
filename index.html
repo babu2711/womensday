@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wishes Board</title>
+    <title>Women's Day Wishes</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.3.3/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        /* Fullscreen Video Background */
+        /* Ensure Full-Screen Video Works on Mobile */
         .video-bg {
             position: fixed;
             top: 0;
@@ -18,7 +19,7 @@
             z-index: -1;
         }
 
-        /* Enable full scrolling */
+        /* Ensure scrolling works */
         body {
             font-family: 'Poppins', sans-serif;
             color: white;
@@ -27,116 +28,74 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
         }
 
-        /* Wishes board container */
-        .board-container {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
+        .container {
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
             padding: 1.5rem;
             border-radius: 12px;
             width: 90%;
-            max-width: 600px;
+            max-width: 500px;
             margin: auto;
-            box-shadow: 0px 0px 20px rgba(255, 215, 0, 0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Wishes section - scroll enabled */
-        .wishes-container {
-            max-height: 60vh;
             overflow-y: auto;
+        }
+
+        /* Adjust Form Input Fields for Mobile */
+        input, button {
             width: 100%;
-            padding: 10px;
-        }
-
-        /* Wish card styling */
-        .wish-card {
-            background: #FFDA79;
-            color: #4E342E;
-            padding: 16px;
-            border-radius: 12px;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            animation: fadeIn 0.5s forwards ease-in-out;
-            margin-bottom: 15px;
-        }
-
-        /* Smooth fade-in animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            padding: 12px;
+            font-size: 16px;
         }
 
         /* Mobile Optimization */
         @media (max-width: 600px) {
-            .board-container {
-                width: 95%;
-            }
-            .wishes-container {
-                max-height: 50vh;
+            .container {
+                padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Sunflower Video Background -->
+    <!-- Video Background -->
     <video autoplay loop muted playsinline class="video-bg">
         <source src="sunflower-background.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
-    <div class="board-container">
-        <h1 class="text-3xl font-extrabold text-white text-center mb-4">🌻 Women's Day Wishes Board 🌻</h1>
-
-        <!-- Scrollable Wishes Section -->
-        <div id="wishesContainer" class="wishes-container">
-            <!-- Wishes will be loaded here -->
+    <div class="container bg-white shadow-lg rounded-lg p-6 text-center text-gray-900">
+        <!-- Logo -->
+        <div class="flex justify-center mb-4">
+            <img src="logo.png" alt="Zone Sorcerers Logo" class="w-24 h-24 rounded-full shadow-lg">
         </div>
 
-        <div class="text-center mt-4">
-            <a href="index.html" class="bg-orange-500 text-white font-bold p-3 rounded-lg text-lg hover:bg-orange-600 transition">⬅️ Back to Submit Page</a>
+        <!-- Header -->
+        <h2 class="text-md font-semibold text-gray-500">An Initiative of</h2>
+        <h1 class="text-2xl font-extrabold text-purple-700 border-b-4 border-purple-500 pb-2 inline-block">Zone Sorcerers</h1>
+
+        <!-- Women's Day Quote -->
+        <p class="italic text-gray-700 mt-3 text-lg">“Empowered women, empower the world.”</p>
+
+        <p class="text-gray-600 mt-4 text-lg">Celebrate and honor the incredible women in your life! 💕</p>
+
+        <!-- Form to Upload Wishes -->
+        <div class="mt-6">
+            <input type="text" id="toInput" class="border rounded-lg text-lg p-2 focus:ring-2 focus:ring-purple-400 focus:outline-none" placeholder="To: (Recipient Name)">
+            <input type="text" id="wishInput" class="border rounded-lg text-lg p-2 mt-3 focus:ring-2 focus:ring-purple-400 focus:outline-none" placeholder="Write your wish here...">
+            <input type="text" id="fromInput" class="border rounded-lg text-lg p-2 mt-3 focus:ring-2 focus:ring-purple-400 focus:outline-none" placeholder="From: (Your Name)">
+            <input type="file" id="imageInput" accept="image/*" class="border rounded-lg p-2 mt-3">
+            <button onclick="submitWish()" class="bg-purple-700 text-white font-bold p-3 mt-3 rounded-lg text-lg hover:bg-purple-800">Submit Wish</button>
+        </div>
+
+        <!-- View Wishes Button -->
+        <div class="mt-6">
+            <a href="gallery.html" class="bg-orange-500 text-white font-bold p-3 rounded-lg text-lg hover:bg-orange-600 transition">📌 View Wishes Board</a>
         </div>
     </div>
-
-    <script>
-        function loadWishes() {
-            let wishes = JSON.parse(localStorage.getItem("wishes")) || [];
-            let wishesContainer = document.getElementById("wishesContainer");
-
-            if (wishes.length === 0) {
-                wishesContainer.innerHTML = `<p class="text-center text-white text-lg">No wishes yet. Submit one now!</p>`;
-                return;
-            }
-
-            wishesContainer.innerHTML = "";
-
-            wishes.forEach((wish, index) => {
-                let wishCard = document.createElement("div");
-                wishCard.className = "wish-card p-4 rounded-lg shadow-md";
-                wishCard.style.animationDelay = `${index * 0.2}s`; // Staggered fade-in effect
-
-                let wishText = `
-                    <p>✨ <strong>To:</strong> ${wish.to}</p>
-                    <p>${wish.text}</p>
-                    <p>💌 <strong>From:</strong> ${wish.from}</p>
-                `;
-
-                if (wish.image) {
-                    wishText += `<img src="${wish.image}" class="w-full mt-4 rounded-lg shadow-md">`;
-                }
-
-                wishCard.innerHTML = wishText;
-                wishesContainer.appendChild(wishCard);
-            });
-        }
-
-        window.onload = loadWishes;
-    </script>
 
 </body>
 </html>
